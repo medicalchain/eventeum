@@ -82,7 +82,8 @@ public class KafkaConfiguration {
         if ("PLAINTEXT".equals(settings.getSecurityProtocol())) {
             configurePlaintextSecurityProtocol(props);
         }
-        return new DefaultKafkaConsumerFactory<>(props, null, new JsonDeserializer<>(EventeumMessage.class));
+
+        return new DefaultKafkaConsumerFactory<String, EventeumMessage>(props, null, new JsonDeserializer<>(EventeumMessage.class));
     }
 
     @Bean
@@ -92,7 +93,7 @@ public class KafkaConfiguration {
         props.put(ConsumerConfig.GROUP_ID_CONFIG, settings.getGroupId());
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 
-        return new DefaultKafkaConsumerFactory<>(props, null, new JsonDeserializer<>(Object.class));
+        return new DefaultKafkaConsumerFactory<Object, Object>(props, null, new JsonDeserializer<>(Object.class));
     }
 
     @Bean

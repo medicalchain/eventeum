@@ -14,7 +14,8 @@
 
 package net.consensys.eventeumserver.integrationtest;
 
-import com.mongodb.MongoClient;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import junit.framework.TestCase;
 import net.consensys.eventeum.constant.Constants;
 import net.consensys.eventeum.dto.block.BlockDetails;
@@ -234,7 +235,7 @@ public abstract class ServiceRestartRecoveryTests extends BaseKafkaIntegrationTe
 
             try {
                 //Check mongo is up
-                final MongoClient mongo = new MongoClient();
+                final MongoClient mongo = MongoClients.create();
                 final List<String> databaseNames = IterableUtils.toList(mongo.listDatabaseNames());
 
                 if (databaseNames.size() > 0) {
