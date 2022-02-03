@@ -76,7 +76,7 @@ public class BaseKafkaIntegrationTest extends BaseIntegrationTest {
 
         // set up the Kafka consumer properties
         final Map<String, Object> consumerProperties =
-                KafkaTestUtils.consumerProps(generateTestGroupId(), "false", embeddedKafka);
+                KafkaTestUtils.consumerProps(generateTestGroupId(), "false", "embeddedKafka");
 
         //Child classes can modify the properties
         modifyKafkaConsumerProps(consumerProperties);
