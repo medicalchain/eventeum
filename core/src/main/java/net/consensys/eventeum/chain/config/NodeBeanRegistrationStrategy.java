@@ -26,6 +26,7 @@ import net.consensys.eventeum.chain.service.strategy.PubSubBlockSubscriptionStra
 import net.consensys.eventeum.chain.settings.Node;
 import net.consensys.eventeum.chain.settings.NodeSettings;
 import okhttp3.ConnectionPool;
+import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.RuntimeBeanReference;
@@ -236,7 +237,7 @@ public class NodeBeanRegistrationStrategy {
             ConnectionPool pool = new ConnectionPool(node.getMaxIdleConnections(), node.getKeepAliveDuration(), TimeUnit.MILLISECONDS);
             OkHttpClient client = globalOkHttpClient.newBuilder()
                     .connectionPool(pool)
-                    //. cookieJar(new JavaNetCookieJar(cookieManager))
+                    . cookieJar(new JavaNetCookieJar(cookieManager))
                     .readTimeout(node.getReadTimeout(),TimeUnit.MILLISECONDS)
                     .connectTimeout(node.getConnectionTimeout(),TimeUnit.MILLISECONDS)
                     .build();

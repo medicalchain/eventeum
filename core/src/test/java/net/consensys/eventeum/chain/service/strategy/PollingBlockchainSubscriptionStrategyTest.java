@@ -21,18 +21,16 @@ import net.consensys.eventeum.chain.service.block.BlockNumberService;
 import net.consensys.eventeum.chain.service.domain.Block;
 import net.consensys.eventeum.settings.EventeumSettings;
 import net.consensys.eventeum.testutils.DummyAsyncTaskService;
-import org.aspectj.lang.annotation.Before;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.methods.response.EthBlock;
 
 import java.math.BigInteger;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.*;
 
 public class PollingBlockchainSubscriptionStrategyTest {
@@ -59,7 +57,7 @@ public class PollingBlockchainSubscriptionStrategyTest {
 
     private EventeumSettings mockSettings;
 
-    @BeforeEach
+    @Before
     public void init() {
         this.mockWeb3j = mock(Web3j.class);
 

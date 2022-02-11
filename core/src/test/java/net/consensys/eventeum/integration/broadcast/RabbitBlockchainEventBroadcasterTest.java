@@ -32,13 +32,13 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import static org.mockito.ArgumentMatchers.eq;
 
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 
 public class RabbitBlockchainEventBroadcasterTest {

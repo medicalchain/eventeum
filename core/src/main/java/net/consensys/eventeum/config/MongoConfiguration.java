@@ -14,9 +14,7 @@
 
 package net.consensys.eventeum.config;
 
-import com.mongodb.Block;
-import com.mongodb.MongoClientSettings;
-import com.mongodb.connection.ConnectionPoolSettings;
+import com.mongodb.MongoClientOptions;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,9 +24,9 @@ import org.springframework.context.annotation.Configuration;
 public class MongoConfiguration {
 
     @Bean
-    public MongoClientSettings mongoClientOptions() {
-        return MongoClientSettings.builder()
-                .applyToConnectionPoolSettings(builder -> builder.maxConnecting(1000))
+    public MongoClientOptions mongoClientOptions() {
+        return MongoClientOptions.builder()
+                .connectionsPerHost(1000)
                 .build();
     }
 }
