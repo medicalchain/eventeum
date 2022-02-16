@@ -19,7 +19,6 @@ import java.util.Collections;
 import net.consensys.eventeum.chain.converter.EventParameterConverter;
 import net.consensys.eventeum.chain.settings.Node;
 import net.consensys.eventeum.chain.util.Web3jUtil;
-import net.consensys.eventeum.chain.converter.EventParameterConverter;
 import net.consensys.eventeum.dto.event.ContractEventDetails;
 import net.consensys.eventeum.dto.event.ContractEventStatus;
 import net.consensys.eventeum.dto.event.filter.ContractEventFilter;
@@ -106,7 +105,7 @@ public class DefaultContractEventDetailsFactory implements ContractEventDetailsF
         return FunctionReturnDecoder.decode(
                 log.getData(),
                 Utils.convert(Web3jUtil.getTypeReferencesFromParameterDefinitions(
-                        orderedParams)));
+                        orderedParams, false)));
     }
 
     private List<Type> getIndexedParametersFromLog(ContractEventSpecification eventSpec, Log log) {
@@ -119,7 +118,7 @@ public class DefaultContractEventDetailsFactory implements ContractEventDetailsF
 
         return IntStream.range(0, encodedParameters.size())
                 .mapToObj(i -> FunctionReturnDecoder.decodeIndexedValue(encodedParameters.get(i),
-                        Web3jUtil.getTypeReferenceFromParameterType(definitions.get(i).getType())))
+                        Web3jUtil.getTypeReferenceFromParameterType(definitions.get(i).getType(), true)))
                 .collect(Collectors.toList());
     }
 

@@ -22,12 +22,12 @@ import net.consensys.eventeum.dto.event.filter.ParameterType;
 import net.consensys.eventeum.service.exception.ValidationException;
 import org.web3j.abi.EventEncoder;
 import org.web3j.abi.TypeReference;
-import org.web3j.abi.Utils;
 import org.web3j.abi.datatypes.*;
 import org.web3j.abi.datatypes.generated.Bytes1;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Useful Web3j related utility methods
@@ -65,23 +65,28 @@ public class Web3jUtil {
     }
 
     public static List<TypeReference<?>> getTypeReferencesFromParameterDefinitions(
-            List<ParameterDefinition> parameterDefinitions) {
+            List<ParameterDefinition> parameterDefinitions, boolean indexed) {
         if (parameterDefinitions == null || parameterDefinitions.isEmpty()) {
             return Collections.emptyList();
         }
 
         return parameterDefinitions
                 .stream()
-                .map(parameterDefinition -> getTypeReferenceFromParameterType(parameterDefinition.getType()))
+                .map(parameterDefinition -> getTypeReferenceFromParameterType(parameterDefinition.getType(), indexed))
                 .collect(Collectors.toList());
     }
 
-    public static TypeReference<?> getTypeReferenceFromParameterType(ParameterType parameterType) {
+    public static TypeReference<?> getTypeReferenceFromParameterType(ParameterType parameterType, boolean indexed) {
         if (!typeMappings.containsKey(parameterType)) {
             throw new ValidationException(String.format("Type %s not supported", parameterType.getType()));
         }
 
-        return typeMappings.get(parameterType).getTypeReference();
+        TypeMapping mapping = typeMappings.get(parameterType);
+        TypeReference<?> ref = mapping.getTypeReference();
+        if(indexed)
+            return TypeReference.create(mapping.clazz, true);
+
+        return ref;
     }
 
     public static Class<? extends Type> getClassForParameterType(ParameterType parameterType) {
@@ -89,14 +94,13 @@ public class Web3jUtil {
     }
 
     public static String getSignature(ContractEventSpecification spec) {
+        List<TypeReference<?>> indexedList = getTypeReferencesFromParameterDefinitions(spec.getIndexedParameterDefinitions(), true);
+        List<TypeReference<?>> notIndexedList = getTypeReferencesFromParameterDefinitions(spec.getNonIndexedParameterDefinitions(), false);
 
-        final List<ParameterDefinition> allParameterDefinitions = new ArrayList<>();
-        addAllDefinitions(allParameterDefinitions, spec.getIndexedParameterDefinitions());
-        addAllDefinitions(allParameterDefinitions, spec.getNonIndexedParameterDefinitions());
-        Collections.sort(allParameterDefinitions);
+        List<TypeReference<?>> parameters = Stream.concat(indexedList.stream(), notIndexedList.stream())
+                .collect(Collectors.toList());
 
-        final Event event = new Event(spec.getEventName(),
-                getTypeReferencesFromParameterDefinitions(allParameterDefinitions));
+        final Event event = new Event(spec.getEventName(), parameters);
 
         return EventEncoder.encode(event);
     }
@@ -164,11 +168,5 @@ public class Web3jUtil {
         private TypeReference<?> typeReference;
 
         private Class<? extends Type> clazz;
-    }
-
-    private static void addAllDefinitions(List<ParameterDefinition> fullList, List<ParameterDefinition> toAdd) {
-        if (toAdd != null) {
-            fullList.addAll(toAdd);
-        }
     }
 }

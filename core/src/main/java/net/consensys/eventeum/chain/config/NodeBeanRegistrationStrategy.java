@@ -262,7 +262,7 @@ public class NodeBeanRegistrationStrategy {
         BeanDefinitionBuilder builder = null;
 
         String nodeBlockStrategy = node.getBlockStrategy();
-
+//        nodeBlockStrategy = "PUBSUB";
         if (nodeBlockStrategy != null) {
             if (nodeBlockStrategy.equals("POLL")) {
                 builder = BeanDefinitionBuilder.genericBeanDefinition(PollingBlockSubscriptionStrategy.class);
